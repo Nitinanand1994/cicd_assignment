@@ -26,10 +26,23 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
       
-    - name: Build and Push Docker Image
-      uses: mr-smithers-excellent/docker-build-push@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
       with:
-        image: nitinanand1994/nitin_demo
-        registry: docker.io
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build dev
+      uses: docker/build-push-action@v2
+      id: docker_build_develop
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: |
+          gsscogs/linked-data-repository:develop
+    - name: Develop Image digest
+      run: echo ${{ steps.docker_build_develop.outputs.digest }}

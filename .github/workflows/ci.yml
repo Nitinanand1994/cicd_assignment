@@ -29,8 +29,11 @@ jobs:
     - name: Login to DockerHub
       uses: docker/login-action@v1
       with:
+        image: nitinanand1994/nitin_demo
+        registry: docker.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
